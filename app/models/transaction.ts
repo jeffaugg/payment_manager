@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Client from './client.js'
 import Gateway from './gateway.js'
 import Product from './product.js'
-
+import TransactionProduct from './transaction_product.js'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 
 export default class Transaction extends BaseModel {
   @column({ isPrimary: true })
@@ -28,12 +28,6 @@ export default class Transaction extends BaseModel {
   @column()
   declare card_last_numbers: string
   
-  @column()
-  declare productId: number
-  
-  @column()
-  declare quantity: number
-  
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -48,4 +42,7 @@ export default class Transaction extends BaseModel {
 
   @belongsTo(() => Product)
   public product!: BelongsTo<typeof Product>
+
+  @hasMany(() => TransactionProduct)
+  public transactionProducts!: HasMany<typeof TransactionProduct>
 }

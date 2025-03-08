@@ -13,6 +13,11 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+
+    if (error.code === 'E_ROW_NOT_FOUND') {
+      return ctx.response.status(404).send({ message: 'Recurso não encontrado' })
+    }
+
     return super.handle(error, ctx)
   }
 

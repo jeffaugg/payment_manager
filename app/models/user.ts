@@ -24,7 +24,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
-  declare role: 'ADMIN ' | 'MANAGER' | 'FINANCE ' | 'USER'
+  declare role: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -33,4 +33,5 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare updatedAt: DateTime | null
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
+
 }
