@@ -6,28 +6,31 @@ import PurchaseService, { PurchasePayload } from '#services/purchase_service'
 import { test } from '@japa/runner'
 
 test.group('PurchaseService Unit Tests', (group) => {
-  test('validateProducts throws ProductNotFoundException if a product is missing', async ({ assert }) => {
+  test('validateProducts throws ProductNotFoundException if a product is missing', async ({
+    assert,
+  }) => {
     const service = new PurchaseService()
     const payload: PurchasePayload = {
       items: [
         { productId: 1, quantity: 2 },
-        { productId: 9999, quantity: 1 }
+        { productId: 9999, quantity: 1 },
       ],
       payment: {
         name: 'Test Payment',
         email: 'test@example.com',
         cardNumber: '5569000000006063',
-        cvv: '010'
-      }
+        cvv: '010',
+      },
     }
 
     // Monkey patch Product.query to simulate that only product 1 exists.
     const originalProductQuery = Product.query
-    Product.query = () => ({
-      whereIn: async () => {
-        return [{ id: 1, amount: 1500 }]
-      }
-    }) as any
+    Product.query = () =>
+      ({
+        whereIn: async () => {
+          return [{ id: 1, amount: 1500 }]
+        },
+      }) as any
 
     try {
       await service.processPurchase(payload)
@@ -39,27 +42,28 @@ test.group('PurchaseService Unit Tests', (group) => {
     }
   })
 
-  test('processPurchase returns success when payment and transaction succeed', async ({ assert }) => {
+  test('processPurchase returns success when payment and transaction succeed', async ({
+    assert,
+  }) => {
     const service = new PurchaseService()
     const payload: PurchasePayload = {
-      items: [
-        { productId: 1, quantity: 2 }
-      ],
+      items: [{ productId: 1, quantity: 2 }],
       payment: {
         name: 'Test Payment',
         email: 'test@example.com',
         cardNumber: '5569000000006063',
-        cvv: '010'
-      }
+        cvv: '010',
+      },
     }
 
     // Stub Product.query to return a valid product.
     const originalProductQuery = Product.query
-    Product.query = () => ({
-      whereIn: async () => {
-        return [{ id: 1, amount: 1500 }]
-      }
-    }) as any
+    Product.query = () =>
+      ({
+        whereIn: async () => {
+          return [{ id: 1, amount: 1500 }]
+        },
+      }) as any
 
     // Stub ClientService.getOrCreateClient to return a fixed clientId.
     const originalGetOrCreateClient = service['clientService'].getOrCreateClient
@@ -71,7 +75,7 @@ test.group('PurchaseService Unit Tests', (group) => {
       success: true,
       gatewayRecordId: 2,
       externalId: 'ext-123',
-      message: ''
+      message: '',
     })
 
     // Stub Transaction.create to simulate transaction creation.

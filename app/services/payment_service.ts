@@ -1,16 +1,19 @@
-import Gateway from "#models/gateway"
-import Gateway1Service from "../strategy/Gateway1Service.js"
-import Gateway2Service from "../strategy/Gateway2Service.js"
-import { PaymentData, PaymentGateway, PaymentResult } from "../strategy/interface/IPaymentGateways.js"
-
+import Gateway from '#models/gateway'
+import Gateway1Service from '../strategy/Gateway1Service.js'
+import Gateway2Service from '../strategy/Gateway2Service.js'
+import {
+  PaymentData,
+  PaymentGateway,
+  PaymentResult,
+} from '../strategy/interface/IPaymentGateways.js'
 
 type ProcessPaymentResult = PaymentResult & {
   gatewayRecordId: number
 }
 
 type RefundPaymentResult = {
-  success: boolean,
-  message?: string,
+  success: boolean
+  message?: string
   gatewayRecordId: number
 }
 
@@ -21,8 +24,8 @@ export default class PaymentService {
    */
   private getGatewayInstance(name: string): PaymentGateway {
     const mapping: { [key: string]: any } = {
-      'Gateway1': new Gateway1Service(),
-      'Gateway2': new Gateway2Service(),
+      Gateway1: new Gateway1Service(),
+      Gateway2: new Gateway2Service(),
     }
     return mapping[name]
   }
@@ -36,7 +39,7 @@ export default class PaymentService {
   public async processPayment(data: PaymentData): Promise<ProcessPaymentResult> {
     // Busca gateways ativos ordenados por prioridade
     const gateways = await Gateway.query().where('is_active', true).orderBy('priority', 'asc')
-    
+
     for (const gatewayRecord of gateways) {
       const gatewayInstance = this.getGatewayInstance(gatewayRecord.name)
       if (!gatewayInstance) {
@@ -47,7 +50,11 @@ export default class PaymentService {
         return { ...result, gatewayRecordId: gatewayRecord.id }
       }
     }
-    return { success: false, message: 'Todos os gateways falharam ao processar o pagamento.', gatewayRecordId: 0 }
+    return {
+      success: false,
+      message: 'Todos os gateways falharam ao processar o pagamento.',
+      gatewayRecordId: 0,
+    }
   }
 
   public async refundPayment(transactionId: string): Promise<RefundPaymentResult> {
@@ -62,6 +69,10 @@ export default class PaymentService {
         return { ...result, gatewayRecordId: gatewayRecord.id }
       }
     }
-    return { success: false, message: 'Todos os gateways falharam ao processar o reembolso.', gatewayRecordId: 0 }
+    return {
+      success: false,
+      message: 'Todos os gateways falharam ao processar o reembolso.',
+      gatewayRecordId: 0,
+    }
   }
 }

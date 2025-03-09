@@ -6,7 +6,6 @@ import type { HttpContext } from '@adonisjs/core/http'
  * Controlador responsável por gerenciar os gateways de pagamento.
  */
 export default class GatewaysController {
-  
   public async index({ response }: HttpContext) {
     const gateways = await Gateway.all()
     return response.ok({ gateways })
@@ -14,7 +13,7 @@ export default class GatewaysController {
 
   /**
    * Exibe os detalhes de um gateway específico.
-  **/
+   **/
   public async show({ params, response }: HttpContext) {
     const gateway = await Gateway.findOrFail(params.id)
     return response.ok({ gateway })
@@ -57,7 +56,7 @@ export default class GatewaysController {
  *         updatedAt:
  *           type: string
  *           format: date-time
- * 
+ *
  * /gateways:
  *   get:
  *     summary: Lista todos os gateways

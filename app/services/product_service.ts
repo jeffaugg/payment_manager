@@ -1,4 +1,4 @@
-import Product from "#models/product";
+import Product from '#models/product'
 
 export default class ProductService {
   /**
@@ -34,7 +34,10 @@ export default class ProductService {
    * @param payload Dados a serem atualizados.
    * @returns O produto atualizado.
    */
-  public async updateProduct(id: number, payload: Partial<{ name: string; amount: number }>): Promise<Product> {
+  public async updateProduct(
+    id: number,
+    payload: Partial<{ name: string; amount: number }>
+  ): Promise<Product> {
     const product = await Product.findOrFail(id)
     product.merge(payload)
     await product.save()

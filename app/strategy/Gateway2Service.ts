@@ -1,8 +1,13 @@
-import axios from 'axios';
-import { PaymentData, PaymentGateway, PaymentResult, RefundResult } from './interface/IPaymentGateways.js';
+import axios from 'axios'
+import {
+  PaymentData,
+  PaymentGateway,
+  PaymentResult,
+  RefundResult,
+} from './interface/IPaymentGateways.js'
 
 export default class Gateway2Service implements PaymentGateway {
-  private baseUrl = 'http://localhost:3002';
+  private baseUrl = 'http://localhost:3002'
 
   async processPayment(data: PaymentData): Promise<PaymentResult> {
     try {
@@ -22,10 +27,10 @@ export default class Gateway2Service implements PaymentGateway {
             'Content-Type': 'application/json',
           },
         }
-      );
-      return { success: true, externalId: response.data.id };
+      )
+      return { success: true, externalId: response.data.id }
     } catch (error: any) {
-      return { success: false, message: error.response?.data?.message || error.message };
+      return { success: false, message: error.response?.data?.message || error.message }
     }
   }
 
@@ -41,10 +46,10 @@ export default class Gateway2Service implements PaymentGateway {
             'Content-Type': 'application/json',
           },
         }
-      );
-      return { success: true };
+      )
+      return { success: true }
     } catch (error: any) {
-      return { success: false, message: error.response?.data?.message || error.message };
+      return { success: false, message: error.response?.data?.message || error.message }
     }
   }
 }

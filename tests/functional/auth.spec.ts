@@ -9,7 +9,7 @@ test.group('Auth Endpoints', () => {
 
     response.assertStatus(200)
     response.assertBodyContains({
-      type: 'auth_token'
+      type: 'auth_token',
     })
     assert.exists(response.body().value, 'O token de acesso deve existir')
   })
@@ -21,7 +21,7 @@ test.group('Auth Endpoints', () => {
     })
     response.assertStatus(401)
     response.assertBodyContains({
-      message: 'Credenciais inválidas'
+      message: 'Credenciais inválidas',
     })
   })
 })

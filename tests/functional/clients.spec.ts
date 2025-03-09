@@ -5,11 +5,10 @@ let authToken: string
 let clientRecord: Client
 
 test.group('Clients Endpoints', (group) => {
-
   test('should login and obtain token', async ({ client, assert }) => {
     const response = await client.post('/login').json({
       email: 'adm@email.com',
-      password: 'adm123'
+      password: 'adm123',
     })
     response.assertStatus(200)
     authToken = response.body().value
@@ -29,31 +28,36 @@ test.group('Clients Endpoints', (group) => {
     await clientRecord.delete()
   })
 
-  group.teardown(async () => {
-  })
+  group.teardown(async () => {})
 
   test('GET /clients - should list all clients', async ({ client, assert }) => {
     const response = await client.get('/clients').header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     response.assertBodyContains({
-      clients: [
-        { id: clientRecord.id, name: clientRecord.name, email: clientRecord.email }
-      ]
+      clients: [{ id: clientRecord.id, name: clientRecord.name, email: clientRecord.email }],
     })
     assert.isArray(response.body().clients, 'Deve retornar um array de clientes')
   })
 
-  test('GET /clients/{id} - should show client details with transactions', async ({ client, assert }) => {
-    const response = await client.get(`/clients/${clientRecord.id}`).header('Authorization', `Bearer ${authToken}`)
+  test('GET /clients/{id} - should show client details with transactions', async ({
+    client,
+    assert,
+  }) => {
+    const response = await client
+      .get(`/clients/${clientRecord.id}`)
+      .header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     response.assertBodyContains({
       client: {
         id: clientRecord.id,
         name: clientRecord.name,
         email: clientRecord.email,
-      }
+      },
     })
     // Verifica se a propriedade "transactions" foi carregada (pode estar vazia)
-    assert.exists(response.body().client.transactions, 'O cliente deve possuir a propriedade transactions')
+    assert.exists(
+      response.body().client.transactions,
+      'O cliente deve possuir a propriedade transactions'
+    )
   })
 })

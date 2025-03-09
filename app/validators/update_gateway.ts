@@ -12,7 +12,7 @@ vine.messagesProvider = customMessages
 
 /**
  * Validador para atualização de gateway.
- * 
+ *
  * Este esquema valida:
  * - isActive: obrigatório, booleano.
  * - priority: obrigatório, numérico e positivo.

@@ -1,66 +1,66 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import UsersService from "#services/user_service"
+import UsersService from '#services/user_service'
 import { createUserValidator } from '#validators/create_user'
 
 export default class UsersController {
-    private usersService = new UsersService()
+  private usersService = new UsersService()
 
-    /**
-     * Criação de um novo usuário.
-     * Apenas usuários com role ADMIN podem criar novos usuários.
-     */
-    public async store({ request, auth, response }: HttpContext) {
-      if (auth.user?.role !== 'ADMIN') {
-        return response.unauthorized({ message: 'Apenas administradores podem criar usuários.' })
-      }
-  
-      const payload = await request.validateUsing(createUserValidator)
-  
-      const user = await this.usersService.createUser(payload)
-      return response.created({ user, message: 'Usuário criado com sucesso!' })
+  /**
+   * Criação de um novo usuário.
+   * Apenas usuários com role ADMIN podem criar novos usuários.
+   */
+  public async store({ request, auth, response }: HttpContext) {
+    if (auth.user?.role !== 'ADMIN') {
+      return response.unauthorized({ message: 'Apenas administradores podem criar usuários.' })
     }
-  
-    /**
-     * Lista todos os usuários.
-     */
-    public async index({ response }: HttpContext) {
-      const users = await this.usersService.listUsers()
-      return response.ok({ users })
+
+    const payload = await request.validateUsing(createUserValidator)
+
+    const user = await this.usersService.createUser(payload)
+    return response.created({ user, message: 'Usuário criado com sucesso!' })
+  }
+
+  /**
+   * Lista todos os usuários.
+   */
+  public async index({ response }: HttpContext) {
+    const users = await this.usersService.listUsers()
+    return response.ok({ users })
+  }
+
+  /**
+   * Exibe os detalhes de um usuário específico.
+   */
+  public async show({ params, response }: HttpContext) {
+    const user = await this.usersService.getUser(params.id)
+    return response.ok({ user })
+  }
+
+  /**
+   * Atualiza os dados de um usuário.
+   * Apenas administradores podem atualizar usuários.
+   */
+  public async update({ params, request, auth, response }: HttpContext) {
+    if (auth.user?.role !== 'ADMIN') {
+      return response.unauthorized({ message: 'Apenas administradores podem atualizar usuários.' })
     }
-  
-    /**
-     * Exibe os detalhes de um usuário específico.
-     */
-    public async show({ params, response }: HttpContext) {
-      const user = await this.usersService.getUser(params.id)
-      return response.ok({ user })
+
+    const payload = request.only(['fullName', 'email', 'role'])
+    const user = await this.usersService.updateUser(params.id, payload)
+    return response.ok({ user, message: 'Usuário atualizado com sucesso.' })
+  }
+
+  /**
+   * Remove um usuário.
+   * Apenas administradores podem excluir usuários.
+   */
+  public async destroy({ params, auth, response }: HttpContext) {
+    if (auth.user?.role !== 'ADMIN') {
+      return response.unauthorized({ message: 'Apenas administradores podem remover usuários.' })
     }
-  
-    /**
-     * Atualiza os dados de um usuário.
-     * Apenas administradores podem atualizar usuários.
-     */
-    public async update({ params, request, auth, response }: HttpContext) {
-      if (auth.user?.role !== 'ADMIN') {
-        return response.unauthorized({ message: 'Apenas administradores podem atualizar usuários.' })
-      }
-  
-      const payload = request.only(['fullName', 'email', 'role'])
-      const user = await this.usersService.updateUser(params.id, payload)
-      return response.ok({ user, message: 'Usuário atualizado com sucesso.' })
-    }
-  
-    /**
-     * Remove um usuário.
-     * Apenas administradores podem excluir usuários.
-     */
-    public async destroy({ params, auth, response }: HttpContext) {
-      if (auth.user?.role !== 'ADMIN') {
-        return response.unauthorized({ message: 'Apenas administradores podem remover usuários.' })
-      }
-      await this.usersService.deleteUser(params.id)
-      return response.ok({ message: 'Usuário removido com sucesso.' })
-    }
+    await this.usersService.deleteUser(params.id)
+    return response.ok({ message: 'Usuário removido com sucesso.' })
+  }
 }
 
 /**

@@ -1,4 +1,4 @@
-import Client from "#models/client";
+import Client from '#models/client'
 
 export default class ClientService {
   /**

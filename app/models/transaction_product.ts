@@ -10,13 +10,13 @@ export default class TransactionProduct extends BaseModel {
 
   @column()
   declare transactionId: number
-  
+
   @column()
   declare productId: number
-  
+
   @column()
   declare quantity: number
-  
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

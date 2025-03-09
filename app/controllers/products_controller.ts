@@ -2,8 +2,6 @@ import ProductService from '#services/product_service'
 import { createProductValidator } from '#validators/create_produt'
 import type { HttpContext } from '@adonisjs/core/http'
 
-
-
 export default class ProductsController {
   private productService = new ProductService()
 
@@ -50,7 +48,6 @@ export default class ProductsController {
     return response.ok({ message: 'Produto removido com sucesso.' })
   }
 }
-
 
 /**
  * @swagger

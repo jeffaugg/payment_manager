@@ -1,44 +1,40 @@
-import { SwaggerConfig } from "adonisjs-6-swagger";
+import { SwaggerConfig } from 'adonisjs-6-swagger'
 
 export default {
-	uiEnabled: true, //disable or enable swaggerUi route
-	uiUrl: 'docs', // url path to swaggerUI
-	specEnabled: true, //disable or enable swagger.json route
-	specUrl: '/swagger.json',
+  uiEnabled: true, //disable or enable swaggerUi route
+  uiUrl: 'docs', // url path to swaggerUI
+  specEnabled: true, //disable or enable swagger.json route
+  specUrl: '/swagger.json',
 
-	middleware: [], // middlewares array, for protect your swagger docs and spec endpoints
+  middleware: [], // middlewares array, for protect your swagger docs and spec endpoints
 
-	options: {
-		definition: {
-			openapi: '3.0.0',
-			info: {
-				title: 'Teste Prático Back-end BeTalent',
-				version: '1.0.0',
-				description: 'sistema gerenciador de pagamentos multi-gateway.'
-			},
-			components: {
-				securitySchemes: {
-				bearerAuth: {
-					type: "http",
-					scheme: "bearer",
-					bearerFormat: "JWT"
-				}
-				}
-			},
-			security: [
-				{
-				  bearerAuth: []
-				}
-			  ]
-		},
+  options: {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Teste Prático Back-end BeTalent',
+        version: '1.0.0',
+        description: 'sistema gerenciador de pagamentos multi-gateway.',
+      },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+    },
 
-		apis: [
-			'app/**/*.ts',
-			'docs/swagger/**/*.yml',
-			'start/routes.ts'
-		],
-		basePath: '/'
-	},
-	mode: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'RUNTIME',
-  specFilePath: 'docs/swagger.json'
+    apis: ['app/**/*.ts', 'docs/swagger/**/*.yml', 'start/routes.ts'],
+    basePath: '/',
+  },
+  mode: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'RUNTIME',
+  specFilePath: 'docs/swagger.json',
 } as SwaggerConfig

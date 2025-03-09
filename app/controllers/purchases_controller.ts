@@ -1,8 +1,7 @@
-import Transaction from "#models/transaction"
-import PurchaseService from "#services/purchase_service"
-import { purchaseValidator } from "#validators/create_purchase"
+import Transaction from '#models/transaction'
+import PurchaseService from '#services/purchase_service'
+import { purchaseValidator } from '#validators/create_purchase'
 import type { HttpContext } from '@adonisjs/core/http'
-
 
 export default class PurchaseController {
   private purchaseService = new PurchaseService()
@@ -12,14 +11,19 @@ export default class PurchaseController {
       const payload = await request.validateUsing(purchaseValidator)
       const result = await this.purchaseService.processPurchase(payload)
       if (!result.success) {
-        return response.badRequest({ message: 'Falha ao processar o pagamento', error: result.message })
+        return response.badRequest({
+          message: 'Falha ao processar o pagamento',
+          error: result.message,
+        })
       }
       return response.ok({ message: 'Compra processada com sucesso!', data: result.transaction })
     } catch (error: any) {
       if (error.status === 404) {
         return response.status(404).json({ message: error.message })
       }
-      return response.status(500).json({ message: 'Erro ao processar a compra.', error: error.message })
+      return response
+        .status(500)
+        .json({ message: 'Erro ao processar a compra.', error: error.message })
     }
   }
   /**
@@ -54,7 +58,9 @@ export default class PurchaseController {
 
   public async refund({ params, auth, response }: HttpContext) {
     if (auth.user?.role !== 'FINANCE' && auth.user?.role !== 'ADMIN') {
-      return response.unauthorized({ message: 'Apenas o departamento financeiro ou administradores podem realizar reembolsos.' })
+      return response.unauthorized({
+        message: 'Apenas o departamento financeiro ou administradores podem realizar reembolsos.',
+      })
     }
 
     const transactionId = params.id
@@ -62,11 +68,13 @@ export default class PurchaseController {
     if (result.success) {
       return response.ok({ message: 'Reembolso realizado com sucesso!', data: result })
     } else {
-      return response.badRequest({ message: 'Falha ao processar o reembolso', error: result.message })
+      return response.badRequest({
+        message: 'Falha ao processar o reembolso',
+        error: result.message,
+      })
     }
   }
 }
-
 
 /**
  * @swagger

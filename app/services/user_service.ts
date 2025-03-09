@@ -1,6 +1,6 @@
 // app/Services/UsersService.ts
 
-import User from "#models/user"
+import User from '#models/user'
 
 export default class UsersService {
   /**
@@ -38,7 +38,14 @@ export default class UsersService {
    * @param id O id do usuário a ser atualizado.
    * @param payload Os dados a serem atualizados.
    */
-  public async updateUser(id: number, payload: Partial<{ fullName: string; email: string; role: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER' }>): Promise<User> {
+  public async updateUser(
+    id: number,
+    payload: Partial<{
+      fullName: string
+      email: string
+      role: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
+    }>
+  ): Promise<User> {
     const user = await User.findOrFail(id)
     user.merge(payload)
     await user.save()

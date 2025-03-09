@@ -1,7 +1,6 @@
 import User from '#models/user'
 import { test } from '@japa/runner'
 
-
 let authToken: string
 let createdUserId: number
 
@@ -9,7 +8,7 @@ test.group('Users Endpoints', (group) => {
   test('should login and obtain token', async ({ client, assert }) => {
     const response = await client.post('/login').json({
       email: 'adm@email.com',
-      password: 'adm123'
+      password: 'adm123',
     })
     response.assertStatus(200)
     authToken = response.body().value
@@ -27,10 +26,11 @@ test.group('Users Endpoints', (group) => {
       fullName: 'Test User',
       email: 'test.user@example.com',
       password: 'senhaSegura123',
-      role: 'USER'
+      role: 'USER',
     }
 
-    const response = await client.post('/user')
+    const response = await client
+      .post('/user')
       .json(payload)
       .header('Authorization', `Bearer ${authToken}`)
 
@@ -38,19 +38,19 @@ test.group('Users Endpoints', (group) => {
     createdUserId = response.body().user.id
     assert.isDefined(createdUserId, 'O usuário deve ter um ID')
     response.assertBodyContains({
-      message: 'Usuário criado com sucesso!'
+      message: 'Usuário criado com sucesso!',
     })
   })
 
   test('GET /user - should list all users', async ({ client, assert }) => {
-    const response = await client.get('/user')
-      .header('Authorization', `Bearer ${authToken}`)
+    const response = await client.get('/user').header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     assert.isArray(response.body().users, 'Deve retornar um array de usuários')
   })
 
   test('GET /user/{id} - should show user details', async ({ client, assert }) => {
-    const response = await client.get(`/user/${createdUserId}`)
+    const response = await client
+      .get(`/user/${createdUserId}`)
       .header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     assert.equal(response.body().user.id, createdUserId)
@@ -60,24 +60,26 @@ test.group('Users Endpoints', (group) => {
     const payload = {
       fullName: 'User Updated',
       email: 'user.updated@example.com',
-      role: 'USER'
+      role: 'USER',
     }
-    const response = await client.put(`/user/${createdUserId}`)
+    const response = await client
+      .put(`/user/${createdUserId}`)
       .json(payload)
       .header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     assert.equal(response.body().user.fullName, 'User Updated')
     response.assertBodyContains({
-      message: 'Usuário atualizado com sucesso.'
+      message: 'Usuário atualizado com sucesso.',
     })
   })
 
   test('DELETE /user/{id} - should delete a user', async ({ client }) => {
-    const response = await client.delete(`/user/${createdUserId}`)
+    const response = await client
+      .delete(`/user/${createdUserId}`)
       .header('Authorization', `Bearer ${authToken}`)
     response.assertStatus(200)
     response.assertBodyContains({
-      message: 'Usuário removido com sucesso.'
+      message: 'Usuário removido com sucesso.',
     })
   })
 })

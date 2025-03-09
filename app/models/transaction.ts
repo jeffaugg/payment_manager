@@ -12,22 +12,22 @@ export default class Transaction extends BaseModel {
 
   @column()
   declare clientId: number
-  
+
   @column()
   declare gatewayId: number
-  
+
   @column()
   declare external_id: string
-  
+
   @column()
   declare status: string
-  
+
   @column()
   declare amount: number
 
   @column()
   declare card_last_numbers: string
-  
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

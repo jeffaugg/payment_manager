@@ -7,7 +7,7 @@ const customMessages = new SimpleMessagesProvider({
   'email.unique': 'O email informado já está em uso.',
   'password.required': 'A senha é obrigatória.',
   'password.minLength': 'A senha deve conter no mínimo 6 caracteres.',
-  'role.enum': 'A role deve ser ADMIN, MANAGER, FINANCE ou USER.'
+  'role.enum': 'A role deve ser ADMIN, MANAGER, FINANCE ou USER.',
 })
 
 vine.messagesProvider = customMessages
@@ -24,11 +24,15 @@ vine.messagesProvider = customMessages
 export const createUserValidator = vine.compile(
   vine.object({
     fullName: vine.string().trim().minLength(3),
-    email: vine.string().trim().email().unique(async (db, value) => {
-      const user = await db.from('users').where('email', value).first()
-      return !user
-    }),
+    email: vine
+      .string()
+      .trim()
+      .email()
+      .unique(async (db, value) => {
+        const user = await db.from('users').where('email', value).first()
+        return !user
+      }),
     password: vine.string().minLength(6),
-    role: vine.enum(['ADMIN', 'MANAGER', 'FINANCE', 'USER'])
+    role: vine.enum(['ADMIN', 'MANAGER', 'FINANCE', 'USER']),
   })
 )

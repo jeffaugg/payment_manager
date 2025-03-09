@@ -17,9 +17,11 @@ export default class ClientsController {
   public async show({ params, response }: HttpContext) {
     const client = await Client.findOrFail(params.id)
     await client.load('transactions', (query) => {
-      query.preload('transactionProducts', (qp) => {
-        qp.preload('product')
-      }).preload('gateway')
+      query
+        .preload('transactionProducts', (qp) => {
+          qp.preload('product')
+        })
+        .preload('gateway')
     })
     return response.ok({ client })
   }
