@@ -6,6 +6,7 @@ import {
   PaymentGateway,
   PaymentResult,
 } from '../strategy/interface/IPaymentGateways.js'
+import PaymentServiceContract from './interface/payment_service_contract.js'
 
 type ProcessPaymentResult = PaymentResult & {
   gatewayRecordId: number
@@ -17,7 +18,7 @@ type RefundPaymentResult = {
   gatewayRecordId: number
 }
 
-export default class PaymentService {
+export default class PaymentService implements PaymentServiceContract {
   /**
    * Retorna uma instância do gateway com base no nome.
    * Você pode estender esse mapeamento conforme necessário.

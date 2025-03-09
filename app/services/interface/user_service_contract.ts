@@ -1,64 +1,48 @@
-// app/Services/UsersService.ts
-
 import User from '#models/user'
-import UserServiceContract from './interface/user_service_contract.js'
 
-export default class UsersService implements UserServiceContract {
+// filepath: /home/jeffaugg/dev/payment_manager/app/services/interface/user_service_contract.ts
+
+export default abstract class UserServiceContract {
   /**
    * Cria um novo usuário.
    * @param payload Os dados validados para criação do usuário.
    * @returns O usuário criado.
    */
-  public async createUser(payload: {
+  public abstract createUser(payload: {
     fullName?: string
     email: string
     password: string
     role: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
-  }): Promise<User> {
-    const user = await User.create(payload)
-    return user
-  }
+  }): Promise<User>
 
   /**
    * Retorna todos os usuários.
    */
-  public async listUsers(): Promise<User[]> {
-    return await User.all()
-  }
+  public abstract listUsers(): Promise<User[]>
 
   /**
    * Busca um usuário pelo id.
    * @param id O id do usuário.
    */
-  public async getUser(id: number): Promise<User> {
-    return await User.findOrFail(id)
-  }
+  public abstract getUser(id: number): Promise<User>
 
   /**
    * Atualiza os dados de um usuário.
    * @param id O id do usuário a ser atualizado.
    * @param payload Os dados a serem atualizados.
    */
-  public async updateUser(
+  public abstract updateUser(
     id: number,
     payload: Partial<{
       fullName: string
       email: string
       role: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
     }>
-  ): Promise<User> {
-    const user = await User.findOrFail(id)
-    user.merge(payload)
-    await user.save()
-    return user
-  }
+  ): Promise<User>
 
   /**
    * Remove um usuário.
    * @param id O id do usuário a ser removido.
    */
-  public async deleteUser(id: number): Promise<void> {
-    const user = await User.findOrFail(id)
-    await user.delete()
-  }
+  public abstract deleteUser(id: number): Promise<void>
 }

@@ -2,8 +2,9 @@ import ProductNotFoundException from '#exceptions/product_not_found_exception'
 import Product from '#models/product'
 import Transaction from '#models/transaction'
 import TransactionProduct from '#models/transaction_product'
-import ClientService from './client_service.js'
-import PaymentService from './payment_service.js'
+import { ClientServiceContract } from './interface/client_service_contract.js'
+import PaymentServiceContract from './interface/payment_service_contract.js'
+import { PurchaseServiceContract } from './interface/punchase_service_contracts.js'
 
 export type PurchaseItem = {
   productId: number
@@ -20,9 +21,11 @@ export type PurchasePayload = {
   }
 }
 
-export default class PurchaseService {
-  private clientService = new ClientService()
-  private paymentService = new PaymentService()
+export default class PurchaseService implements PurchaseServiceContract {
+  constructor(
+    protected clientService: ClientServiceContract,
+    protected paymentService: PaymentServiceContract
+  ) {}
 
   /**
    * Valida os produtos informados.

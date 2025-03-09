@@ -1,6 +1,7 @@
 import Product from '#models/product'
+import ProductServiceContract from './interface/product_service_contract.js'
 
-export default class ProductService {
+export default class ProductService implements ProductServiceContract {
   /**
    * Cria um novo produto.
    * @param payload Dados validados do produto.

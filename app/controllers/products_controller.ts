@@ -1,9 +1,11 @@
-import ProductService from '#services/product_service'
+import ProductServiceContract from '#services/interface/product_service_contract'
 import { createProductValidator } from '#validators/create_produt'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
+@inject()
 export default class ProductsController {
-  private productService = new ProductService()
+  constructor(protected productService: ProductServiceContract) {}
 
   /**
    * Cria um novo produto.

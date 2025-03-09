@@ -1,10 +1,11 @@
 import Transaction from '#models/transaction'
-import PurchaseService from '#services/purchase_service'
+import { PurchaseServiceContract } from '#services/interface/punchase_service_contracts'
 import { purchaseValidator } from '#validators/create_purchase'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
-
+@inject()
 export default class PurchaseController {
-  private purchaseService = new PurchaseService()
+  constructor(protected purchaseService: PurchaseServiceContract) {}
 
   public async store({ request, response }: HttpContext) {
     try {

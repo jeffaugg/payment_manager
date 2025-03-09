@@ -1,6 +1,7 @@
 import Client from '#models/client'
+import { ClientServiceContract } from './interface/client_service_contract.js'
 
-export default class ClientService {
+export default class ClientService implements ClientServiceContract {
   /**
    * Busca um cliente pelo email. Se não existir, cria o cliente.
    * Retorna o ID do cliente.

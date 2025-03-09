@@ -1,9 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import UsersService from '#services/user_service'
 import { createUserValidator } from '#validators/create_user'
+import UserServiceContract from '#services/interface/user_service_contract'
+import { inject } from '@adonisjs/core'
 
+@inject()
 export default class UsersController {
-  private usersService = new UsersService()
+  constructor(protected usersService: UserServiceContract) {}
 
   /**
    * Criação de um novo usuário.
