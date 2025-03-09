@@ -15,7 +15,21 @@ export default {
 				title: 'Teste Prático Back-end BeTalent',
 				version: '1.0.0',
 				description: 'sistema gerenciador de pagamentos multi-gateway.'
-			}
+			},
+			components: {
+				securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT"
+				}
+				}
+			},
+			security: [
+				{
+				  bearerAuth: []
+				}
+			  ]
 		},
 
 		apis: [

@@ -152,8 +152,6 @@ export default class PurchaseController {
  *         description: Falha ao processar o pagamento.
  *       404:
  *         description: Produto não encontrado.
- *
- * /purchases:
  *   get:
  *     summary: Lista todas as compras (transações)
  *     tags:
@@ -171,7 +169,7 @@ export default class PurchaseController {
  *                   items:
  *                     $ref: '#/components/schemas/Transaction'
  *
- * /purchases/{id}:
+ * /purchase/{id}:
  *   get:
  *     summary: Exibe os detalhes de uma compra específica
  *     tags:
@@ -196,7 +194,7 @@ export default class PurchaseController {
  *       404:
  *         description: Compra não encontrada.
  *
- * /purchases/{id}/refund:
+ * /purchase/{id}/refund:
  *   post:
  *     summary: Realiza o reembolso de uma compra
  *     tags:

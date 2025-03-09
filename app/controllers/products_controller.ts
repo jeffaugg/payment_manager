@@ -75,7 +75,7 @@ export default class ProductsController {
  *           type: string
  *           format: date-time
  *
- * /product:
+ * /products:
  *   post:
  *     summary: Cria um novo produto
  *     tags:
@@ -123,7 +123,7 @@ export default class ProductsController {
  *                   items:
  *                     $ref: '#/components/schemas/Product'
  *
- * /product/{id}:
+ * /products/{id}:
  *   get:
  *     summary: Exibe os detalhes de um produto específico
  *     tags:
