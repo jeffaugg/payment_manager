@@ -9,10 +9,16 @@ export default abstract class ProductServiceContract {
   public abstract createProduct(payload: { name: string; amount: number }): Promise<Product>
 
   /**
-   * Lista todos os produtos.
-   * @returns Um array de produtos.
+   * Lista todos os produtos com paginação e filtros opcionais.
+   * @param options Objeto contendo paginação e filtros.
+   * @returns Um objeto paginado contendo os produtos.
    */
-  public abstract listProducts(): Promise<Product[]>
+  public abstract listProducts(options: {
+    page?: number
+    limit?: number
+    name?: string
+    amount?: number
+  }): Promise<any>
 
   /**
    * Obtém um produto pelo id.

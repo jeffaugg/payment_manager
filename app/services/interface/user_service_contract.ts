@@ -16,9 +16,13 @@ export default abstract class UserServiceContract {
   }): Promise<User>
 
   /**
-   * Retorna todos os usuários.
+   * Retorna os usuários com paginação e filtro por role.
    */
-  public abstract listUsers(): Promise<User[]>
+  public abstract listUsers(options: {
+    page?: number
+    limit?: number
+    role?: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
+  }): Promise<any>
 
   /**
    * Busca um usuário pelo id.

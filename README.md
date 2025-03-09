@@ -11,6 +11,7 @@ Este projeto é uma API RESTful para gerenciamento de pagamentos multi-gateway, 
 - [Visão Geral](#visão-geral)
 - [Funcionalidades](#funcionalidades)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Injeção de Dependência e Inversão de Dependência](#injeção-de-dependência-e-inversão-de-dependência)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Instalação e Configuração](#instalação-e-configuração)
 - [Migrations e Seeds](#migrations-e-seeds)
@@ -53,6 +54,29 @@ A Payment Manager API permite:
 - **Swagger** - Documentação interativa da API.
 - **Docker Compose** - Para configuração do ambiente (MySQL, mocks dos gateways, etc.).
 - **TDD** - Testes automatizados usando Japa.
+
+
+## Injeção de Dependência e Inversão de Dependência
+
+Nosso projeto utiliza os princípios de Injeção de Dependência e Inversão de Dependência para promover um código desacoplado e de fácil manutenção. Essa abordagem permite que as classes dependam de abstrações (contratos) em vez de implementações concretas, facilitando a substituição de componentes, a realização de testes unitários e a evolução da aplicação.
+
+### Como Funciona
+
+#### Contêiner IoC
+
+O AdonisJS possui um contêiner de Inversão de Controle (IoC) que automaticamente resolve e injeta as dependências necessárias em nossas classes. Isso é feito utilizando decoradores (por exemplo, `@inject()`) e a API de metadata do TypeScript, que permite que o contêiner identifique as dependências declaradas no construtor ou nos métodos.
+
+#### Bindings e Providers
+
+Para isolar a lógica e promover o desacoplamento, definimos contratos (ou abstrações) para os serviços mais importantes. Por exemplo, criamos o contrato `PurchaseServiceContract` (um abstrato) que define os métodos que nosso serviço de compras deve implementar. Em seguida, registramos essa implementação por meio de um provider customizado (`PurchaseServiceProvider`), que vincula o contrato à implementação concreta (`PurchaseService`).
+
+### Benefícios
+
+- **Desacoplamento:** Permite que componentes sejam substituídos facilmente sem alterar o código que os consome.
+- **Testabilidade:** Facilidade para criar mocks ou fakes, permitindo testes unitários e de integração mais robustos.
+- **Manutenção:** Um código modular e baseado em contratos é mais fácil de entender, modificar e escalar.
+![inversão de dependência](image.png)
+
 
 ## Estrutura do Projeto
 
@@ -121,7 +145,7 @@ A documentação interativa foi configurada usando o pacote `adonisjs-6-swagger`
 As anotações Swagger foram adicionadas diretamente nos controllers. Consulte os blocos de comentários JSDoc para detalhes de cada endpoint.
 
 ## Endpoints
-
+> **Acesse a documentação Swagger para mais detalhes sobre a paginação e filtros.**
 ### Autenticação
 
 - **POST /login**

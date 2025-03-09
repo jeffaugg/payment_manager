@@ -18,10 +18,14 @@ export default class ProductsController {
   }
 
   /**
-   * Lista todos os produtos.
+   * Lista todos os produtos com paginação e filtros opcionais.
    */
-  public async index({ response }: HttpContext) {
-    const products = await this.productService.listProducts()
+  public async index({ request, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 10)
+    const name = request.input('name')
+    const amount = request.input('amount')
+    const products = await this.productService.listProducts({ page, limit, name, amount })
     return response.ok({ products })
   }
 
@@ -106,21 +110,49 @@ export default class ProductsController {
  *                   type: string
  *                   example: "Produto criado com sucesso!"
  *   get:
- *     summary: Lista todos os produtos
+ *     summary: Lista todos os produtos com paginação e filtros opcionais.
  *     tags:
  *       - Produtos
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: name
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - name: amount
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
  *     responses:
  *       200:
- *         description: Lista de produtos.
+ *         description: Lista paginada de produtos.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 products:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Product'
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Product'
+ *                     meta:
+ *                       type: object
+ *                     links:
+ *                       type: object
  *
  * /products/{id}:
  *   get:
@@ -128,12 +160,11 @@ export default class ProductsController {
  *     tags:
  *       - Produtos
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
  *         schema:
  *           type: number
- *         description: ID do produto.
  *     responses:
  *       200:
  *         description: Detalhes do produto.
@@ -151,12 +182,11 @@ export default class ProductsController {
  *     tags:
  *       - Produtos
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
  *         schema:
  *           type: number
- *         description: ID do produto.
  *     requestBody:
  *       required: true
  *       content:
@@ -188,12 +218,11 @@ export default class ProductsController {
  *     tags:
  *       - Produtos
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
  *         schema:
  *           type: number
- *         description: ID do produto.
  *     responses:
  *       200:
  *         description: Produto removido com sucesso.

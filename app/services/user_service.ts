@@ -20,10 +20,21 @@ export default class UsersService implements UserServiceContract {
   }
 
   /**
-   * Retorna todos os usuários.
+   * Retorna os usuários com paginação e filtro por role.
    */
-  public async listUsers(): Promise<User[]> {
-    return await User.all()
+  public async listUsers(options: {
+    page?: number
+    limit?: number
+    role?: 'ADMIN' | 'MANAGER' | 'FINANCE' | 'USER'
+  }): Promise<any> {
+    const { page = 1, limit = 10, role } = options
+    const query = User.query()
+
+    if (role) {
+      query.where('role', role)
+    }
+
+    return await query.paginate(page, limit)
   }
 
   /**

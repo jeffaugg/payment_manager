@@ -3,10 +3,31 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ClientsController {
   /**
-   * Lista todos os clientes.
+   * Lista todos os clientes com paginação e filtro por nome e email.
+   *
+   * Query Parameters:
+   * - page: Número da página (default: 1)
+   * - limit: Quantidade de registros por página (default: 10)
+   * - name: Filtro por nome (parcial)
+   * - email: Filtro por email (parcial)
    */
-  public async index({ response }: HttpContext) {
-    const clients = await Client.all()
+  public async index({ request, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 10)
+    const name = request.input('name')
+    const email = request.input('email')
+
+    const query = Client.query()
+
+    if (name) {
+      query.where('name', 'like', `%${name}%`)
+    }
+
+    if (email) {
+      query.where('email', 'like', `%${email}%`)
+    }
+
+    const clients = await query.paginate(page, limit)
     return response.ok({ clients })
   }
 
@@ -98,9 +119,30 @@ export default class ClientsController {
  *
  * /clients:
  *   get:
- *     summary: Lista todos os clientes
+ *     summary: Lista todos os clientes paginados
  *     tags:
  *       - Clientes
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: name
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - name: email
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Lista de clientes.
@@ -110,9 +152,16 @@ export default class ClientsController {
  *               type: object
  *               properties:
  *                 clients:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Client'
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Client'
+ *                     meta:
+ *                       type: object
+ *                     links:
+ *                       type: object
  *
  * /clients/{id}:
  *   get:
@@ -135,7 +184,16 @@ export default class ClientsController {
  *               type: object
  *               properties:
  *                 client:
- *                   $ref: '#/components/schemas/Client'
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Client'
+ *                     meta:
+ *                       type: object
+ *                     links:
+ *                       type: object
  *       404:
  *         description: Cliente não encontrado.
  */

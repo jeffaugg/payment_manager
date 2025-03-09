@@ -23,10 +23,13 @@ export default class UsersController {
   }
 
   /**
-   * Lista todos os usuários.
+   * Lista todos os usuários com paginação e filtro por role.
    */
-  public async index({ response }: HttpContext) {
-    const users = await this.usersService.listUsers()
+  public async index({ request, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 10)
+    const role = request.input('role')
+    const users = await this.usersService.listUsers({ page, limit, role })
     return response.ok({ users })
   }
 
@@ -134,23 +137,47 @@ export default class UsersController {
  *         description: Acesso não autorizado.
  *
  *   get:
- *     summary: Lista todos os usuários
+ *     summary: Lista todos os usuários com paginação e filtro por role.
  *     tags:
  *       - Usuários
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: role
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [ADMIN, MANAGER, FINANCE, USER]
  *     responses:
  *       200:
- *         description: Lista de usuários.
+ *         description: Lista paginada de usuários.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 users:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/User'
+ *                     meta:
+ *                       type: object
+ *                     links:
+ *                       type: object
  *
  * /user/{id}:
  *   get:

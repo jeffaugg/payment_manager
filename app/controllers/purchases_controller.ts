@@ -27,17 +27,21 @@ export default class PurchaseController {
         .json({ message: 'Erro ao processar a compra.', error: error.message })
     }
   }
+
   /**
-   * Lista todas as compras (transações) registradas.
+   * Lista todas as compras (transações) registradas com paginação.
    * Preload: Carrega informações do cliente, gateway e itens da transação (com produto).
    */
-  public async index({ response }: HttpContext) {
+  public async index({ request, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 10)
     const purchases = await Transaction.query()
       .preload('client')
       .preload('gateway')
       .preload('transactionProducts', (query) => {
         query.preload('product')
       })
+      .paginate(page, limit)
     return response.ok({ purchases })
   }
 
@@ -168,21 +172,39 @@ export default class PurchaseController {
  *       404:
  *         description: Produto não encontrado.
  *   get:
- *     summary: Lista todas as compras (transações)
+ *     summary: Lista todas as compras (transações) com paginação.
  *     tags:
  *       - Compras
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: number
  *     responses:
  *       200:
- *         description: Lista de compras.
+ *         description: Lista paginada de compras.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 purchases:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Transaction'
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Transaction'
+ *                     meta:
+ *                       type: object
+ *                     links:
+ *                       type: object
  *
  * /purchase/{id}:
  *   get:

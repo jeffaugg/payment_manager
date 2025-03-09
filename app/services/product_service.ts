@@ -13,11 +13,28 @@ export default class ProductService implements ProductServiceContract {
   }
 
   /**
-   * Lista todos os produtos.
-   * @returns Um array de produtos.
+   * Lista todos os produtos com paginação e filtros opcionais.
+   * @param options Objeto contendo paginação e filtros.
+   * @returns Um objeto paginado contendo os produtos.
    */
-  public async listProducts(): Promise<Product[]> {
-    return await Product.all()
+  public async listProducts(options: {
+    page?: number
+    limit?: number
+    name?: string
+    amount?: number
+  }): Promise<any> {
+    const { page = 1, limit = 10, name, amount } = options
+    const query = Product.query()
+
+    if (name) {
+      query.where('name', 'like', `%${name}%`)
+    }
+
+    if (amount) {
+      query.where('amount', amount)
+    }
+
+    return await query.paginate(page, limit)
   }
 
   /**
