@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  payment_manager-api:
+    image: payment_manager
+    container_name: payment_manager
+    restart: unless-stopped
+    build:
+      context: .
+      target: build
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    env_file:
+      - .env
+    volumes:
+      - ./:/home/node/app
+      - /home/node/app/node_modules
+    command: sh -c "node ace migration:run && node ace db:seed && node ace serve --watch"
+    depends_on:
+      - db
+      - gateways-mock
+
   db:
     image: mysql:8.0
     container_name: payment_db
@@ -13,6 +33,14 @@ services:
       - '3306:3306'
     volumes:
       - db_data:/var/lib/mysql
+
+  gateways-mock:
+    image: matheusprotzen/gateways-mock
+    container_name: gateways-mock
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+      - '3002:3002'
 
 volumes:
   db_data:
