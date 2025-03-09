@@ -59,51 +59,16 @@ A Payment Manager API permite:
 ```
 ├── app
 │   ├── Controllers
-│   │   ├── AuthController.ts
-│   │   ├── ClientsController.ts
-│   │   ├── ProductsController.ts
-│   │   ├── PurchaseController.ts
-│   │   ├── GatewaysController.ts
-│   │   └── UserController.ts
 │   ├── Exceptions
-│   │   └── ProductNotFoundException.ts
 │   ├── Models
-│   │   ├── Client.ts
-│   │   ├── Gateway.ts
-│   │   ├── Product.ts
-│   │   ├── Transaction.ts
-│   │   ├── TransactionProduct.ts
-│   │   └── User.ts
 │   ├── Services
-│   │   ├── ClientService.ts
-│   │   ├── PaymentService.ts
-│   │   ├── ProductService.ts
-│   │   ├── PurchaseService.ts
-│   │   └── UserService.ts
 │   └── Validators
-│       ├── create_product_validator.ts
-│       ├── create_purchase_validator.ts
-│       └── update_gateway.ts
 ├── config
-│   ├── auth.ts
-│   ├── hash.ts
-│   ├── swagger.ts
-│   └── database.ts
 ├── database
 │   ├── migrations
-│   │   ├── [timestamp]_create_clients_table.ts
-│   │   ├── [timestamp]_create_products_table.ts
-│   │   ├── [timestamp]_create_transactions_table.ts
-│   │   ├── [timestamp]_create_transaction_products_table.ts
-│   │   ├── [timestamp]_create_gateways_table.ts
-│   │   └── [timestamp]_create_users_table.ts
 │   └── seeders
-│       └── GatewaySeeder.ts
-│       └── UserSeeder.ts
 ├── docs
-│   └── swagger.json (gerado automaticamente)
 ├── start
-│   └── routes.ts
 ├── README.md
 └── package.json
 ```
@@ -116,23 +81,23 @@ A Payment Manager API permite:
     cd payment_manager
     ```
 
-2. **Instale as dependências:**
-    ```bash
-    npm install
-    ```
+4. **Configure as variáveis de ambiente:**
+    - Crie um arquivo `.env` baseado no exemplo fornecido (verifique o arquivo `.env.example`).
+    - Garanta que o `HOST` dentro do .env seja 0.0.0.0
+    - Configure as variáveis do banco de dados (`DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_DATABASE`) e outras necessárias conforme o docker compose.
+    - Configure a variável `DB_HOST`:
+        - Se estiver rodando pelo Docker, defina `DB_HOST` como `db`.
+        - Se estiver rodando localmente, defina `DB_HOST` como `localhost`.
 
-3. **Inicie os serviços com Docker Compose:**
+3. **Inicie a aplicação com Docker Compose:**
     ```bash
     docker-compose up -d
     ```
 
-4. **Configure as variáveis de ambiente:**
-    - Crie um arquivo `.env` baseado no exemplo fornecido (verifique o arquivo `.env.example`).
-    - Configure as variáveis do banco de dados (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_DATABASE`) e outras necessárias.
-
 ## Migrations e Seeds
+    As migrations e seeds já estão configuradas para serem executadas dentro do ambiente Docker.
 
-1. **Executando as Migrations e Seeds:**
+1. **Executando as Migrations e Seeds localmente:**
      ```bash
      node ace migration:run
      node ace db:seed   # Para inserir gateways iniciais e usuário adm base.
@@ -280,6 +245,7 @@ As anotações Swagger foram adicionadas diretamente nos controllers. Consulte o
 
 - **TDD:**
     O projeto conta com testes automatizados (utilizando Japa). Para executar os testes:
+    > **Aviso:** Para executar os testes, a aplicação deve estar configurada para rodar localmente.
     ```bash
     node ace test
     ```
