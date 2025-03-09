@@ -2,8 +2,10 @@ import ProductNotFoundException from '#exceptions/product_not_found_exception'
 import Product from '#models/product'
 import Transaction from '#models/transaction'
 import TransactionProduct from '#models/transaction_product'
+import { inject } from '@adonisjs/core'
 import { ClientServiceContract } from './interface/client_service_contract.js'
 import PaymentServiceContract from './interface/payment_service_contract.js'
+import TransactionNotFoundException from '#exceptions/transaction_not_found_exception'
 import { PurchaseServiceContract } from './interface/punchase_service_contracts.js'
 
 export type PurchaseItem = {
@@ -20,7 +22,7 @@ export type PurchasePayload = {
     cvv: string
   }
 }
-
+@inject()
 export default class PurchaseService implements PurchaseServiceContract {
   constructor(
     protected clientService: ClientServiceContract,
@@ -118,7 +120,7 @@ export default class PurchaseService implements PurchaseServiceContract {
     const transaction = await Transaction.find(transactionId)
 
     if (!transaction) {
-      throw new Error(`Transaction with ID ${transactionId} not found`)
+      throw new TransactionNotFoundException(transactionId)
     }
 
     const refundResult = await this.paymentService.refundPayment(transaction.id.toString())

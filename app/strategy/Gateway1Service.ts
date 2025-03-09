@@ -7,7 +7,7 @@ import {
 } from './interface/IPaymentGateways.js'
 
 export default class Gateway1Service implements PaymentGateway {
-  private baseUrl = 'http://localhost:3001'
+  private baseUrl = process.env.GATEWAY1_BASE_URL
 
   async processPayment(data: PaymentData): Promise<PaymentResult> {
     try {

@@ -65,14 +65,20 @@ export default class PurchaseController {
     }
 
     const transactionId = params.id
-    const result = await this.purchaseService.refundPurchase(transactionId)
-    if (result.success) {
-      return response.ok({ message: 'Reembolso realizado com sucesso!', data: result })
-    } else {
-      return response.badRequest({
-        message: 'Falha ao processar o reembolso',
-        error: result.message,
-      })
+    try {
+      const result = await this.purchaseService.refundPurchase(transactionId)
+      if (result.success) {
+        return response.ok({ message: 'Reembolso realizado com sucesso!', data: result })
+      } else {
+        return response.badRequest({
+          message: 'Falha ao processar o reembolso',
+          error: result.message,
+        })
+      }
+    } catch (error: any) {
+      return response
+        .status(error.status)
+        .json({ message: 'Erro ao processar o reembolso.', error: error.message })
     }
   }
 }
